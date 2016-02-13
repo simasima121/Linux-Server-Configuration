@@ -35,16 +35,16 @@ Source: [How To Add and Delete Users on an Ubuntu 14.04 VPS](https://www.digital
 		`visudo`
   1. Search for line:
 		`root ALL=(ALL:ALL) ALL`
-  1. Copy format of that line and change word **root** to grader i.e. <new user>:
+  1. Copy format of that line and change word **root** to grader i.e. new user:
 		`<new user> All=(ALL:ALL) ALL`
 
-### 2.a - Set up SSH access for <new user>
+### 2.a - Set up SSH access for new user
 
 1. On **local machine**, create key pair:
 	`ssh-keygen`
-2. On **remote server**, switch into <new user> home directory:
+2. On **remote server**, switch into new user home directory:
 	`su - <new user>`
-2. Create a .ssh folder in the <new user> home directory:
+2. Create a .ssh folder in the new user home directory:
 	`mkdir .ssh`
 3. Create an authorized_keys file where you place your public key:
 	`touch .ssh/authorized_keys`
@@ -59,9 +59,9 @@ Source: [How To Add and Delete Users on an Ubuntu 14.04 VPS](https://www.digital
 8. Install ssh server login:
 	`sudo apt-get install openssh-server`
 
-### 2.b - Login as <new user>:
+### 2.b - Login as new user:
 
-1. In **terminal** login in as <new user>:
+1. In **terminal** login in as new user:
 	`ssh <new user>@<Public IP address> -p <port number> -i ~/.ssh/<private key filename>`
 
 ### 3 - Update all currently installed packages
@@ -78,3 +78,21 @@ Source: [How To Add and Delete Users on an Ubuntu 14.04 VPS](https://www.digital
 1. Execute the following command:
 	`sudo dpkg-reconfigure tzdata`
 2. Find UTC timezone and press enter
+
+### 5 - Change SSH port from 22 to 2200
+Source: [SSH Essentials: Working with SSH Servers, Clients, and Keys](https://www.digitalocean.com/community/tutorials/ssh-essentials-working-with-ssh-servers-clients-and-keys)
+
+1. Open the sshd_config file on the server with root privileges:
+	`sudo nano /etc/ssh/sshd_config`
+2. Search for line:
+	`port 22`
+3. Change port that SSH runs on to 2200:
+	```
+	#port 22
+	port 2200
+	```
+4. Save, close then restart:
+	`sudo service ssh restart`
+
+
+
