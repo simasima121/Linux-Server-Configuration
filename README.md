@@ -17,21 +17,21 @@ Source: [Udacity](https://www.udacity.com/account#!/development_environment)
 	`ssh -i ~/.ssh/udacity_key.rsa root@<Public IP address>`
 
 ### 1.a - Install finger program
-The finger program provides status reports on a particular computer system or user 
+The finger program provides status reports on a particular computer system or user.
+Install with following command:
 `apt-get install finger` 
 
 ### 2 - Create new user named grader and grant user sudo permissions
 Source: [How To Add and Delete Users on an Ubuntu 14.04 VPS](https://www.digitalocean.com/community/tutorials/how-to-add-and-delete-users-on-an-ubuntu-14-04-vps)
-
 
 1. Create a new user called grader:
 	`adduser grader`
 2. Ensure user has been created successfully:
 	`finger grader`
 3. To grant user sudo privileges:
-..1. Type:
+  1. Type:
 		`visudo`
-..2. Search for line:
+  1. Search for line:
 		`root ALL=(ALL:ALL) ALL`
-..3. Copy format of that line and change word **root** to grader i.e. <new user>:
+  1. Copy format of that line and change word **root** to grader i.e. <new user>:
 		`<new user> All=(ALL:ALL) ALL`
