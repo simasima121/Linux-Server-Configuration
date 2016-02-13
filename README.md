@@ -87,12 +87,26 @@ Source: [SSH Essentials: Working with SSH Servers, Clients, and Keys](https://ww
 2. Search for line:
 	`port 22`
 3. Change port that SSH runs on to 2200:
+
 	```
 	#port 22
 	port 2200
 	```
 4. Save, close then restart:
 	`sudo service ssh restart`
+
+### 5.a - Disabling root login
+
+1. Open SSH daemon config file on server:
+	`sudo nano /etc/ssh/sshd_config`
+2. Search for directive called:
+	`PermitRootLogin`
+3. Change value to no:
+	`PermitRootLogin no`
+4. Save, close then restart:
+	`sudo service ssh restart`
+
+### 6 - 
 
 
 
