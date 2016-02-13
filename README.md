@@ -7,14 +7,10 @@ This includes installing updates, securing it from a number of attack vectors an
 Source: [Udacity](https://www.udacity.com/account#!/development_environment)
 
 1. Create new folder 
-
 2. Downloaded Private Key and record Public IP address
-
 3. Moved the private key file into ~/.ssh folder:
-`mv ~/Downloads/udacity_key.rsa ~/.ssh/` 
-
+	`mv ~/Downloads/udacity_key.rsa ~/.ssh/` 
 4. Set file rights (owner can read and write):
-`chmod 600 ~/.ssh/udacity_key.rsa`
-
+	`chmod 600 ~/.ssh/udacity_key.rsa`
 5. SSH into Virtual Machine:
-`ssh -i ~/.ssh/udacity_key.rsa root@<Public IP address>`
+	`ssh -i ~/.ssh/udacity_key.rsa root@<Public IP address>`
