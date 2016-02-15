@@ -73,6 +73,15 @@ Source: [How To Add and Delete Users on an Ubuntu 14.04 VPS](https://www.digital
 3. Remove packages that are no longer needed:
 	`sudo apt-get autoremove`
 
+### 3.a - Stop sudo error:
+Source: [Stack Overflow](http://stackoverflow.com/questions/33441873/aws-error-sudo-unable-to-resolve-host-ip-10-0-xx-xx)
+
+1. As root user, navigate to /etc folder
+2. Modify hosts file:
+	`nano hosts`
+3. Under Localhost, declare private ip:
+	`10.0.xx.xx ip-10-0-xx-xx` 
+
 ### 4 - Configure local timezone to UTC:
 
 1. Execute the following command:
@@ -115,18 +124,49 @@ Source: [SSH Essentials: Working with SSH Servers, Clients, and Keys](https://ww
 3. Allow all outgoing connections:
 	`sudo ufw default allow outgoing`
 4. Allow incoming connection for SSH (port 2200):
-  1. Allow SSH:
-  		`sudo ufw allow ssh`
-  2. Allow all tcp connections on port 2200:
+  1. Allow incoming tcp connections on port 2200:
   		`sudo ufw allow 2200/tcp`
 5. Allow HTTP port (port 80):
-	`sudo ufw allow www`
+	`sudo ufw allow 80/tcp`
 6. Allow NTP port (port 123):
-	`sudo ufw allow 123`
+	`sudo ufw allow 123/udp`
 7. Enable the firewall:
 	`sudo ufw enable`
 8. Confirm firewall set up as indicated:
 	`sudo ufw status`
+
+### 7 - Install and configure Apache to serve a Python mod-wsgi app
+Source: [Udacity](https://www.udacity.com/course/viewer#!/c-ud299-nd/l-4340119836/m-4818948614)
+
+1. Install apache:
+	`sudo apt-get install apache2`
+2. Check apache is installed correctly by going to browser and typing in servers Public IP address - It should say 'It works' on the top of the page.
+3. Install mod_wsgi:
+	`sudo apt-get install libapache2-mod-wsgi`
+4. Configure apache to handle requsts using WSGI module by editing the `/etc/apache2/sites-enabled/000-default.conf` file:
+  1. Add the line at the end of the `<VirtualHost *:80>` block: 
+  		`WSGIScriptAlias / /var/www/html/myapp.wsgi`
+  2. Restart apache:
+  		`sudo apache2ctl restart`
+
+### 7.a - Stop AH00558 error:
+Source: [Tutorial For Linux](http://tutorialforlinux.blogspot.co.uk/2013/10/solve-problem-ah00558-when-restarting.html)
+
+Source: [Ask Ubuntu](http://askubuntu.com/questions/256013/could-not-reliably-determine-the-servers-fully-qualified-domain-name)
+
+
+1. Open file httpd.conf - by default it will be blank:
+	`sudo nano /etc/apache2/httpd.conf`
+2. Add following line to the file:
+	`ServerName localhost`
+3. Open file apache2.conf, and scroll to bottom of file:
+	`sudo nano /etc/apache2/apache2.conf`
+4. Add following to end of file:
+	`ServerName localhost`
+5. Save file and restart the server:.
+	`sudo service apache2 restart`
+
+
 
 
 
