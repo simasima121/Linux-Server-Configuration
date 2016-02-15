@@ -106,7 +106,28 @@ Source: [SSH Essentials: Working with SSH Servers, Clients, and Keys](https://ww
 4. Save, close then restart:
 	`sudo service ssh restart`
 
-### 6 - 
+### 6 - Configure the Uncomplicated Firewall(UFW) to only allow incoming connections for SSH (port 2200), HTTP (port 80), and NTP (port 123)
+
+1. Check status of firewall is inactive:
+	`sudo ufw status`
+2. Initially block all incoming connections:
+	`sudo ufw default deny incoming`
+3. Allow all outgoing connections:
+	`sudo ufw default allow outgoing`
+4. Allow incoming connection for SSH (port 2200):
+  1. Allow SSH:
+  		`sudo ufw allow ssh`
+  2. Allow all tcp connections on port 2200:
+  		`sudo ufw allow 2200/tcp`
+5. Allow HTTP port (port 80):
+	`sudo ufw allow www`
+6. Allow NTP port (port 123):
+	`sudo ufw allow 123`
+7. Enable the firewall:
+	`sudo ufw enable`
+8. Confirm firewall set up as indicated:
+	`sudo ufw status`
+
 
 
 
