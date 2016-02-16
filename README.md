@@ -142,18 +142,108 @@ Source: [Udacity](https://www.udacity.com/course/viewer#!/c-ud299-nd/l-434011983
 	`sudo apt-get install apache2`
 2. Check apache is installed correctly by going to browser and typing in servers Public IP address - It should say 'It works' on the top of the page.
 3. Install mod_wsgi:
-	`sudo apt-get install libapache2-mod-wsgi`
-4. Configure apache to handle requsts using WSGI module by editing the `/etc/apache2/sites-enabled/000-default.conf` file:
+	`sudo apt-get install libapache2-mod-wsgi python-dev`
+4. Enable the mod_wsgi module:
+	`sudo a2enmod wsgi`
+5. Configure apache to handle requsts using WSGI module by editing the `/etc/apache2/sites-enabled/000-default.conf` file:
   1. Add the line at the end of the `<VirtualHost *:80>` block: 
   		`WSGIScriptAlias / /var/www/html/myapp.wsgi`
   2. Restart apache:
   		`sudo apache2ctl restart`
 
-### 7.a - Stop AH00558 error:
+### 7.a - Deploying a Flask application on Ubuntu VPS
+Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
+
+1. Create a flask app
+  1. Move to /var/www directory:
+		`cd /var/www`
+  2. Create application directory structure:
+		`sudo mkdir catalog`
+  3. Move to catalog directory:
+		`cd catalog`
+  4. Create another directory catalog:
+		`sudo mkdir catalog`
+  5. Move inside this directory and create 2 subdirectories *static* and *templates*:
+		```
+		cd catalog
+		sudo mkdir static templates
+		```
+  6. Create file that contains flask application logic:
+		`sudo nano __init__.py`
+  7. Add following logic to the file - paste in the code:
+		```
+		from flask import Flask
+		app = Flask(__name__)
+		@app.route("/")
+		def hello():
+	    	return "Hello, I love Sim's tutorial!"
+		if __name__ == "__main__":
+	    	app.run()
+		```
+2. Install Flask
+  1. Install pip:
+  		`sudo apt-get install python-pip`
+  2. Install virtualenv:
+  		`sudo pip install virtualenv`
+  3. Set temporary environment:
+  		`sudo virtualenv venv`
+  4. Active virtual environment:
+  		`source venv/bin/activate`
+  5. Install Flask inside virtual environment:
+  		`sudo pip install Flask`
+  6. Test if installation was successful and app is running - should display "Running on http://127.0.0.1:5000/":
+  		`sudo python __init__.py`
+  7. Deactivate the environment:
+  		`deactivate`
+3. Configure and Enable a new virtual host
+  1. Create a virtual host file:
+  		`sudo nano /etc/apache2/sites-available/catalog.conf`
+  2. Configure the virtual host - paste this into file and change addresses:
+  		```
+  		<VirtualHost *:80>
+				ServerName <PUBLIC IP ADDRESS>
+				ServerAdmin admin@<PUBLIC IP ADDRESS>
+				WSGIScriptAlias / /var/www/catalog/catalog.wsgi
+				<Directory /var/www/catalog/catalog/>
+					Order allow,deny
+					Allow from all
+				</Directory>
+				Alias /static /var/www/catalog/catalog/static
+				<Directory /var/www/catalog/catalog/static/>
+					Order allow,deny
+					Allow from all
+				</Directory>
+				ErrorLog ${APACHE_LOG_DIR}/error.log
+				LogLevel warn
+				CustomLog ${APACHE_LOG_DIR}/access.log combined
+		</VirtualHost>
+		```
+	3. Enable virtual host:
+		`sudo a2ensite catalog`
+4. Create the .wsgi file
+  1. Move to /var/www/catalog directory and create file called catalog.wsgi:
+  		```
+  		cd /var/www/catalog
+  		sudo nano catalog.wsgi
+  		```
+  2. Paste following lines into catalog.wsgi file:
+  		```
+  		#!/usr/bin/python
+		import sys
+		import logging
+		logging.basicConfig(stream=sys.stderr)
+		sys.path.insert(0,"/var/www/catalog/")
+
+		from catalog import app as application
+		application.secret_key = 'Add your secret key'
+  		```
+5. Restart Apache - to view output, navigate to your Public IP Address:
+	`sudo service apache2 restart`
+
+### 7.b - Stop AH00558 error:
 Source: [Tutorial For Linux](http://tutorialforlinux.blogspot.co.uk/2013/10/solve-problem-ah00558-when-restarting.html)
 
 Source: [Ask Ubuntu](http://askubuntu.com/questions/256013/could-not-reliably-determine-the-servers-fully-qualified-domain-name)
-
 
 1. Open file httpd.conf - by default it will be blank:
 	`sudo nano /etc/apache2/httpd.conf`
@@ -165,6 +255,53 @@ Source: [Ask Ubuntu](http://askubuntu.com/questions/256013/could-not-reliably-de
 	`ServerName localhost`
 5. Save file and restart the server:.
 	`sudo service apache2 restart`
+
+### 8 - Install and configure PostgreSQL
+Source: [Udacity](https://www.udacity.com/course/viewer#!/c-ud299-nd/l-4340119836/m-4808948548)
+
+#### 8.1 - Do not allow remote connections
+1. Install **PostgreSQL**:
+	`sudo apt-get install postgresql postgresql-contrib`
+2. Default is no remote connections allowed - check this:
+	`sudo vim /etc/postgresql/9.3/main/pg_hba.conf`
+
+#### 8.2 - Create new user named catalog with limited permissions to Catalog App database
+Source: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)
+1. Create a new user called catalog:
+	`sudo adduser catalog`
+2. Log into PostgreSQL:
+
+	```
+	sudo su - postgres
+	psql
+	```
+3. Create user catalog:
+	`CREATE ROLE catalog;`
+4. Create a database owned by catalog:
+	`CREATE DATABASE catalog WITH OWNER catalog;`
+5. Grant catalog user database permissions:
+	`ALTER USER catalog CREATEDB;`
+5. Connect to database and lock permissions:
+	```
+	\c catalog
+	REVOKE ALL ON SCHEMA public FROM public;
+	GRANT ALL ON SCHEMA public TO catalog;
+	```
+6. Log out of PostgreSQL and postgres user:
+	`\q` then `exit`
+
+### 9 - Install git, clone and set up your Catalog App project
+Source: [Data Science Bytes](http://www.datasciencebytes.com/bytes/2015/02/24/running-a-flask-app-on-aws-ec2/)
+
+1. Install Flask using the pip-tool:
+	```
+	sudo apt-get install python-pip
+	sudo pip install flask
+	```
+2. Create a directory for our Flask App
+
+
+
 
 
 
