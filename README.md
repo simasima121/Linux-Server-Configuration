@@ -171,6 +171,7 @@ Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digital
   6. Create file that contains flask application logic:
 		`sudo nano __init__.py`
   7. Add following logic to the file - paste in the code:
+		
 		```
 		from flask import Flask
 		app = Flask(__name__)
@@ -199,6 +200,7 @@ Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digital
   1. Create a virtual host file:
   		`sudo nano /etc/apache2/sites-available/catalog.conf`
   2. Configure the virtual host - paste this into file and change addresses:
+  		
   		```
   		<VirtualHost *:80>
 				ServerName <PUBLIC IP ADDRESS>
@@ -282,6 +284,7 @@ Source: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-
 5. Grant catalog user database permissions:
 	`ALTER USER catalog CREATEDB;`
 5. Connect to database and lock permissions:
+	
 	```
 	\c catalog
 	REVOKE ALL ON SCHEMA public FROM public;
