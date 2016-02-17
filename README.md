@@ -155,11 +155,11 @@ Source: [Udacity](https://www.udacity.com/course/viewer#!/c-ud299-nd/l-434011983
 Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
 
 1. Create a flask app
-  1. Move to /var/www directory:
+  1. Change directory to /var/www directory:
 		`cd /var/www`
   2. Create application directory structure:
 		`sudo mkdir catalog`
-  3. Move to catalog directory:
+  3. Change directory to catalog directory:
 		`cd catalog`
   4. Create another directory catalog:
 		`sudo mkdir catalog`
@@ -177,7 +177,7 @@ Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digital
 		app = Flask(__name__)
 		@app.route("/")
 		def hello():
-	    	return "Hello, I love Sim's tutorial!"
+	    	return "Hello, I love this tutorial!"
 		if __name__ == "__main__":
 	    	app.run()
 		```
@@ -269,39 +269,97 @@ Source: [Udacity](https://www.udacity.com/course/viewer#!/c-ud299-nd/l-434011983
 
 #### 8.2 - Create new user named catalog with limited permissions to Catalog App database
 Source: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-secure-postgresql-on-an-ubuntu-vps)
+
 1. Create a new user called catalog:
 	`sudo adduser catalog`
 2. Log into PostgreSQL:
-
+	
 	```
 	sudo su - postgres
 	psql
 	```
 3. Create user catalog:
-	`CREATE ROLE catalog;`
-4. Create a database owned by catalog:
-	`CREATE DATABASE catalog WITH OWNER catalog;`
-5. Grant catalog user database permissions:
+	`CREATE ROLE catalog WITH PASSWORD 'DATABASE-PASSWORD';`
+4. Grant catalog user database permissions:
 	`ALTER USER catalog CREATEDB;`
-5. Connect to database and lock permissions:
+5. Create a database owned by catalog:
+	`CREATE DATABASE catalog WITH OWNER catalog;`
+
+6. Connect to database and lock permissions:
 	
 	```
 	\c catalog
 	REVOKE ALL ON SCHEMA public FROM public;
 	GRANT ALL ON SCHEMA public TO catalog;
 	```
-6. Log out of PostgreSQL and postgres user:
+7. Log out of PostgreSQL and postgres user:
 	`\q` then `exit`
 
 ### 9 - Install git, clone and set up your Catalog App project
 Source: [Data Science Bytes](http://www.datasciencebytes.com/bytes/2015/02/24/running-a-flask-app-on-aws-ec2/)
 
-1. Install Flask using the pip-tool:
-	```
-	sudo apt-get install python-pip
-	sudo pip install flask
-	```
-2. Create a directory for our Flask App
+#### 9.1 Install Git
+Source: [Github](https://help.github.com/articles/set-up-git/#platform-linux)
+
+1. Install Git:
+	`sudo apt-get install git`
+2. Set your name for commits:
+	`git config --global user.name "YOUR NAME"`
+3. Set your email address - same as the one used when signing up for github:
+	`git config --global user.email "YOUR EMAIL ADDRESS"`
+
+#### 9.2 - Clone Github repo
+Source: [Github](https://help.github.com/articles/cloning-a-repository/)
+
+1. Navigate to `/var/www/catalog/catalog/` directory
+	`cd /var/www/catalog/catalog`
+2. Clone the Catalog App:
+	`git clone https://github.com/simasima121/catalog.git`
+3. Move files to `/var/www/catalog/catalog` directory - dont forget .git file:
+	`sudo mv <FILENAME> /var/www/catalog/catalog`
+4. Remove empty catalog directory:
+	`sudo rmdir catalog`
+
+#### 9.3 - Make .git directory inaccessible
+Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-directory-web-inaccessible)
+
+1. Navigate to `var/www/catalog`:
+	`cd /var/www/catalog`
+2. Create file called .htaccess:
+	`sudo nano .htaccess`
+3. Paste the following into file:
+	`RedirectMatch 404 /\.git`
+
+#### 9.4 - Install modules
+
+1. Navigate to `var/www/catalog/catalog`
+2. Activate the virtual environment:
+	`source venv/bin/activate`
+3. Install the http2lib2 in venv:
+	`sudo pip install httplib2`
+4. Install SQLAlchemy:
+	`sudo pip install sqlalchemy`
+5. Install oauth2client:
+	`sudo pip install oauth2client`
+6. Install psycopg:
+	`sudo apt-get install python-psycopg2`
+
+#### 9.5 - Set up Catalog app
+
+1. Open database_setup.py file:
+	`sudo nano database_setup.py`
+2. Edit line `engine = create_engine('sqlite:///catalogwithusers.db')` - replace with your *DATABASE-PASSWORD*:
+	`engine = create_engine('postgresql://catalog:DATABASE-PASSWORD@localhost/catalog')`
+3. Open the application.py file & do the same edit at the `engine` line
+4. Rename application.py to __init__.py:
+	`mv application.py __init__.py`
+
+#### 9.6 - Checking if app set up properly:
+1. Restart Apache:
+	`sudo service apache2 restart`
+2. Open broswer and put your Public IP address as the url - application should load
+3. If you get an internal server error, check apache error files:
+	`sudo tail -20 /var/log/apache2/error.log`
 
 
 
