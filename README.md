@@ -358,11 +358,7 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 	engine = create_engine('postgresql://catalog:catalog@localhost/catalog')
 	```
 2. Update application.secret_key in catalog_wsgi to same as secret key from application.py:
-	
-	```
-	sudo nano ~/catalog.wsgi
-
-	```
+	`sudo nano ~/catalog.wsgi`
 3. Rename application.py:
 	`mv application.py __init__.py`
 
@@ -381,7 +377,7 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 3. If you get an internal server error, check apache error files:
 	`sudo tail -20 /var/log/apache2/error.log`
 
-#### 9.7 - Configuring Third Party Logins:
+#### 9.7 - Set Amazon instance public URL
 
 1. Edit apache config files for web app:
 	`sudo nano /etc/apache2/sites-available/catalog.conf`
@@ -393,7 +389,28 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 	```
 3. Enable the virtual host:
 	`sudo a2ensite catalog`
-4. 
+
+#### 9.8 - Configure OAuth logins:
+1. For Google authorization:
+  1. Navigate to project in Developer Console: (Developers Console)[https://console.developers.google.com/project]
+  2. Navigate to API Manager > Credentials > Click on web client
+  3. In Authorizated JavaScript origins add:
+
+  	```
+  	http://<Your Public IP Address>
+  	ec2-XX-XX-XXX-X.us-west-2.compute.amazonaws.com
+  	```
+  4. In Authorized redirect URIs add:
+  	`ec2-XX-XX-XXX-X.us-west-2.compute.amazonaws.com/oauth2callback`
+2. For Facebook authorization:
+  1. Navigate to Facebook Develop Site: [Facebook for Developers](https://developers.facebook.com/apps/)
+  2. Click on catalog app > Settings > Advanced
+  3. In Valid OAuth redirect URIs add:
+
+  	```
+  	http://<Your Public IP Address>
+  	ec2-XX-XX-XXX-X.us-west-2.compute.amazonaws.com
+  	```
 
 
 
