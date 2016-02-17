@@ -4,7 +4,9 @@ This includes installing updates, securing it from a number of attack vectors an
 
 ## Info about my server
 IP Address = 52.36.188.8
+
 SSH Port = 2200
+
 Complete URL of hosted web app = http://ec2-52-36-188-8.us-west-2.compute.amazonaws.com/
 
 ## Step by Step Walkthrough
@@ -24,8 +26,7 @@ Source: [Udacity](https://www.udacity.com/account#!/development_environment)
 ### 1.a - Install finger program
 The finger program provides status reports on a particular computer system or user.
 
-Install with the following command:
-
+Install with the following command: 
 `apt-get install finger` 
 
 ### 2 - Create new user named grader and grant user sudo permissions
