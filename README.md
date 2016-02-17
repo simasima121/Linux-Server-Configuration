@@ -2,6 +2,11 @@
 A baseline installation of Ubuntu Linux on a virtual machine to host a Flask web application I developed earlier in the course [Catalog app](https://github.com/simasima121/catalog).
 This includes installing updates, securing it from a number of attack vectors and installing/configuring web and database servers.
 
+## Info about my server
+IP Address = 52.36.188.8
+SSH Port = 2200
+Complete URL of hosted web app = http://ec2-52-36-188-8.us-west-2.compute.amazonaws.com/
+
 ## Step by Step Walkthrough
 
 ### 1 - Launching the VM and SSH into the server
@@ -411,6 +416,18 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
   	http://<Your Public IP Address>
   	ec2-XX-XX-XXX-X.us-west-2.compute.amazonaws.com
   	```
+3. In **__init__.py**, find line `CLIENT_ID`, `app_id` and app_secret:
+	
+	```
+	#CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
+	CLIENT_ID = json.loads(open('/var/www/catalog/catalog/client_secrets.json', 'r').read())['web']['client_id'
+	
+	#app_id = json.loads(open('/var/www/catalog/catalog/fb_client_secrets.json', 'r').read())['web']['app_id']
+	app_id = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_id']
+   
+   #app_secret = json.loads(open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+   app_secret = json.loads(open('/var/www/catalog/catalog/fb_client_secrets.json', 'r').read())['web']['app_secret']
+	```
 
 
 
