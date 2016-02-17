@@ -145,11 +145,6 @@ Source: [Udacity](https://www.udacity.com/course/viewer#!/c-ud299-nd/l-434011983
 	`sudo apt-get install libapache2-mod-wsgi python-dev`
 4. Enable the mod_wsgi module:
 	`sudo a2enmod wsgi`
-5. Configure apache to handle requsts using WSGI module by editing the `/etc/apache2/sites-enabled/000-default.conf` file:
-  1. Add the line at the end of the `<VirtualHost *:80>` block: 
-  		`WSGIScriptAlias / /var/www/html/myapp.wsgi`
-  2. Restart apache:
-  		`sudo apache2ctl restart`
 
 ### 7.a - Deploying a Flask application on Ubuntu VPS
 Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps)
@@ -188,13 +183,15 @@ Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digital
   		`sudo pip install virtualenv`
   3. Set temporary environment:
   		`sudo virtualenv venv`
-  4. Active virtual environment:
+  4. Enable all permissions for Virtual Environment - sudo doesn't need to be used within it:
+  		`sudo chmod -R 777 venv`
+  5. Active virtual environment:
   		`source venv/bin/activate`
-  5. Install Flask inside virtual environment:
-  		`sudo pip install Flask`
-  6. Test if installation was successful and app is running - should display "Running on http://127.0.0.1:5000/":
-  		`sudo python __init__.py`
-  7. Deactivate the environment:
+  6. Install Flask inside virtual environment:
+  		`pip install Flask`
+  7. Test if installation was successful and app is running - should display "Running on http://127.0.0.1:5000/":
+  		`python __init__.py`
+  8. Deactivate the environment:
   		`deactivate`
 3. Configure and Enable a new virtual host
   1. Create a virtual host file:
@@ -282,6 +279,8 @@ Source: [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-
 	`CREATE ROLE catalog WITH PASSWORD 'DATABASE-PASSWORD';`
 4. Grant catalog user database permissions:
 	`ALTER USER catalog CREATEDB;`
+5. Grant catalog user login permissions:
+	`ALTER USER catalog LOGIN`
 5. Create a database owned by catalog:
 	`CREATE DATABASE catalog WITH OWNER catalog;`
 
@@ -336,23 +335,38 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 2. Activate the virtual environment:
 	`source venv/bin/activate`
 3. Install the http2lib2 in venv:
-	`sudo pip install httplib2`
+	`pip install httplib2`
 4. Install SQLAlchemy:
 	`sudo pip install sqlalchemy`
 5. Install oauth2client:
-	`sudo pip install oauth2client`
+	`sudo pip install --upgrade oauth2client`
+6. Install python library:
+	`sudo apt-get install libpq-dev python-dev`
 6. Install psycopg:
 	`sudo apt-get install python-psycopg2`
+6. Install psycopg:
+	`pip install psycopg2`
+7. Install requests:
+	`pip install requests`
 
 #### 9.5 - Set up Catalog app
 
-1. Open database_setup.py file:
-	`sudo nano database_setup.py`
-2. Edit line `engine = create_engine('sqlite:///catalogwithusers.db')` - replace with your *DATABASE-PASSWORD*:
-	`engine = create_engine('postgresql://catalog:DATABASE-PASSWORD@localhost/catalog')`
-3. Open the application.py file & do the same edit at the `engine` line
-4. Rename application.py to __init__.py:
+1. In database_setup.py, application.py and userslotsofcategories.py, edit line `engine = create_engine('sqlite:///catalogwithusers.db')` to absolute path - - replace with your *DATABASE-PASSWORD*:
+	
+	```
+	#engine = create_engine('sqlite:///catalogwithusers.db')
+	engine = create_engine('postgresql://catalog:catalog@localhost/catalog')
+	```
+2. Rename application.py to __init__.py:
 	`mv application.py __init__.py`
+3. Whilst still in virtual environment (if not run `source venv/bin/activate` command), run database_setup.py, __init__.py and userslotsofcategories.py:
+	
+	```
+	python database_setup.py
+	python __init__.py
+	userslotsofcategories.py
+
+	```
 
 #### 9.6 - Checking if app set up properly:
 1. Restart Apache:
@@ -360,6 +374,8 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 2. Open broswer and put your Public IP address as the url - application should load
 3. If you get an internal server error, check apache error files:
 	`sudo tail -20 /var/log/apache2/error.log`
+
+
 
 
 
