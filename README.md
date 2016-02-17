@@ -185,7 +185,7 @@ Source: [How To Deploy a Flask Application on an Ubuntu VPS](https://www.digital
   		`sudo virtualenv venv`
   4. Enable all permissions for Virtual Environment - sudo doesn't need to be used within it:
   		`sudo chmod -R 777 venv`
-  5. Active virtual environment:
+  5. Activate virtual environment:
   		`source venv/bin/activate`
   6. Install Flask inside virtual environment:
   		`pip install Flask`
@@ -357,14 +357,20 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 	#engine = create_engine('sqlite:///catalogwithusers.db')
 	engine = create_engine('postgresql://catalog:catalog@localhost/catalog')
 	```
-2. Rename application.py to __init__.py:
+2. Update application.secret_key in catalog_wsgi to same as secret key from application.py:
+	
+	```
+	sudo nano ~/catalog.wsgi
+
+	```
+3. Rename application.py:
 	`mv application.py __init__.py`
-3. Whilst still in virtual environment (if not run `source venv/bin/activate` command), run database_setup.py, __init__.py and userslotsofcategories.py:
+
+4. Whilst still in virtual environment (if not run `source venv/bin/activate` command), run database_setup.py and userslotsofcategories.py:
 	
 	```
 	python database_setup.py
-	python __init__.py
-	userslotsofcategories.py
+	python userslotsofcategories.py
 
 	```
 
@@ -374,6 +380,20 @@ Source: [Stack Overflow](http://stackoverflow.com/questions/6142437/make-git-dir
 2. Open broswer and put your Public IP address as the url - application should load
 3. If you get an internal server error, check apache error files:
 	`sudo tail -20 /var/log/apache2/error.log`
+
+#### 9.7 - Configuring Third Party Logins:
+
+1. Edit apache config files for web app:
+	`sudo nano /etc/apache2/sites-available/catalog.conf`
+2. Paste your amazon instance public URL underneath the ServerAdmin line - where X is your instance IP address:
+	
+	```
+	ServerAdmin admin@XX.XX.XXX.X
+   ServerAlias HOSTNAME ec2-XX-XX-XXX-X.us-west-2.compute.amazonaws.com
+	```
+3. Enable the virtual host:
+	`sudo a2ensite catalog`
+4. 
 
 
 
